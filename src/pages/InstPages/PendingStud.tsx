@@ -1,17 +1,20 @@
 import { Grid, GridItem, HStack, Image, VStack, Text } from "@chakra-ui/react";
 import ColorMode from "../../components/ColorMode";
 import NavBar from "../../components/NavBar";
-import logo from "../../assets/react.svg";
+import logoWhite from "../../assets/LogoWhite.svg";
+import logoBlack from "../../assets/LogoBlack.svg";
 import Pending from "../../components/Pending";
+import { useColorMode } from "../../components/ui/color-mode";
 
 const PendingStud = () => {
+  const colorMode = useColorMode().colorMode;
   const pendings = [1, 2, 3, 4];
   const transfer = [5, 6, 7, 8];
   return (
     <Grid templateAreas={{ base: `"nav" "main"` }}>
       <GridItem area="nav" justifyContent={"space-between"}>
         <HStack justifyContent="space-between" padding={2}>
-          <Image src={logo} />
+          <Image src={colorMode === "dark" ? logoWhite : logoBlack} />
           <NavBar
             pages={[
               "Home",

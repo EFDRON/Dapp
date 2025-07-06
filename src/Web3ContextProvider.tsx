@@ -5,12 +5,23 @@ import React, {
   type ReactNode,
 } from "react";
 import Web3 from "web3";
+import publicdata from "./files/publicdata";
+import keys from "./files/keys";
+const contInfo = keys.contractInformations;
+const besu = keys.besu;
+interface UserData {
+  type: string;
+  contAddress: string;
+  node: string;
+}
+const ZERO_ADDRESS = "0x0000000000000000000000000000000000000000";
 
 interface Web3ContextType {
   trigger: boolean;
   setTrigger: React.Dispatch<React.SetStateAction<boolean>>;
   account?: string | undefined;
   connect: () => Promise<string | undefined>;
+  check: (account: string) => Promise<UserData>;
 }
 
 export const Web3Context = createContext<Web3ContextType>({
@@ -18,6 +29,9 @@ export const Web3Context = createContext<Web3ContextType>({
   setTrigger: () => {},
   account: undefined,
   connect: async () => undefined,
+  check: async () => {
+    return { type: "", contAddress: "", node: "" };
+  },
 });
 
 interface Web3ProviderProps {
@@ -45,8 +59,55 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
     }
   };
 
+  const check = async (account: string) => {
+    const web3Instance = new Web3(window.ethereum);
+    const contractInstance = new web3Instance.eth.Contract(
+      publicdata.abi,
+      contInfo.publicdata.contractAddress
+    );
+    try {
+      const isMoe = await contractInstance.methods
+        .ismoe()
+        .call({ from: account });
+      if (isMoe) {
+        return { type: "moe", contAddress: "", node: "" };
+      }
+    } catch (err) {
+      console.log(err);
+    }
+
+    try {
+      const value2: string[] = await contractInstance.methods
+        .getInstContractAddress(account)
+        .call({ from: besu.rpcnode.accountAddress });
+
+      if (value2[0] !== ZERO_ADDRESS) {
+        return { type: "institute", contAddress: value2[0], node: value2[1] };
+      }
+    } catch (err) {
+      console.log("Not Institute");
+    }
+
+    try {
+      const value3: string[] = await contractInstance.methods
+        .getStudContractAddress(account)
+        .call({ from: besu.rpcnode.accountAddress });
+
+      if (value3[0] !== ZERO_ADDRESS) {
+        return { type: "student", contAddress: value3[0], node: value3[1] };
+      }
+    } catch (err) {
+      console.log("Not Student");
+    }
+
+    console.log("Redirecting to REC, no other roles found, account: ");
+    return { type: "rec", contAddress: "", node: "" };
+  };
+
   return (
-    <Web3Context.Provider value={{ trigger, setTrigger, account, connect }}>
+    <Web3Context.Provider
+      value={{ trigger, setTrigger, account, connect, check }}
+    >
       {children}
     </Web3Context.Provider>
   );

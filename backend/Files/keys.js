@@ -1,6 +1,5 @@
 // WARNING: the keys here are demo purposes ONLY. Please use a tool like EthSigner for production, rather than hard coding private keys
-
-export default {
+module.exports = {
   tessera: {
     member1: {
       publicKey: "BULeR8JyUWhiuuCMU/HLA0Q5pzkYT+cHII3ZKBey3Bo=",
