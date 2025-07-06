@@ -1,6 +1,6 @@
 import { Grid, GridItem, HStack, Image } from "@chakra-ui/react";
-import logoWhite from "../assets/LogoWhite.svg";
-import logoBlack from "../assets/LogoBlack.svg";
+import logoWhite from "../../assets/LogoWhite.svg";
+import logoBlack from "../../assets/LogoBlack.svg";
 import ColorMode from "../../components/ColorMode";
 import Pending from "../../components/Pending";
 import { useColorMode } from "../../components/ui/color-mode";

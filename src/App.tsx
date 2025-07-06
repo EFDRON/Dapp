@@ -13,8 +13,6 @@ import InstHome from "./pages/InstPages/InstHome";
 import RecHome from "./pages/RecruiterPages/RecHome";
 import { Web3Provider } from "./Web3ContextProvider";
 import Register from "./pages/Register";
-import TimeLine from "./components/TimeLine";
-import WatitinForVerification from "./pages/WatitinForVerification";
 
 [
   "Home",
@@ -28,7 +26,7 @@ function App() {
     <Web3Provider>
       <Routes>
         {/* Connect Page */}
-        <Route path="/" element={<WatitinForVerification />} />
+        <Route path="/" element={<Connect />} />
 
         {/* Admin Page */}
         <Route path="/admin-home" element={<AdminHome />} />
