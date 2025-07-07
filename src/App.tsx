@@ -14,13 +14,6 @@ import RecHome from "./pages/RecruiterPages/RecHome";
 import { Web3Provider } from "./Web3ContextProvider";
 import Register from "./pages/Register";
 
-[
-  "Home",
-  "Register to Institution",
-  "Add Skill",
-  "Add Certificate",
-  "Add Work Experience",
-];
 function App() {
   return (
     <Web3Provider>

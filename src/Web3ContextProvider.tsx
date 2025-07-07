@@ -65,10 +65,12 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
       publicdata.abi,
       contInfo.publicdata.contractAddress
     );
+    console.log("contractInstance", contractInstance);
     try {
       const isMoe = await contractInstance.methods
         .ismoe()
         .call({ from: account });
+      console.log("is Moe", isMoe);
       if (isMoe) {
         return { type: "moe", contAddress: "", node: "" };
       }
@@ -79,7 +81,8 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
     try {
       const value2: string[] = await contractInstance.methods
         .getInstContractAddress(account)
-        .call({ from: besu.rpcnode.accountAddress });
+        .call({ from: besu.member2.accountAddress });
+      console.log("value2", value2);
 
       if (value2[0] !== ZERO_ADDRESS) {
         return { type: "institute", contAddress: value2[0], node: value2[1] };
@@ -91,7 +94,8 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
     try {
       const value3: string[] = await contractInstance.methods
         .getStudContractAddress(account)
-        .call({ from: besu.rpcnode.accountAddress });
+        .call({ from: besu.member3.accountAddress });
+      console.log("value3", value3);
 
       if (value3[0] !== ZERO_ADDRESS) {
         return { type: "student", contAddress: value3[0], node: value3[1] };

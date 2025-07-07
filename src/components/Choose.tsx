@@ -12,9 +12,12 @@ const Choose = () => {
     const connecdAccount = await connect();
     setTrigger((prev) => !prev);
     console.log(connecdAccount);
+
     if (connecdAccount) {
+      console.log("Connected");
       const data = await check(connecdAccount);
       console.log("data: ", data);
+
       if (data.type === "moe") navigate("/admin-home");
       else if (data.type === "institute") navigate("/institution-home");
       else if (data.type === "student") navigate("/Student-home");

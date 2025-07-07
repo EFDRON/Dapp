@@ -9,8 +9,10 @@ import {
 import axios from "axios";
 import { useContext, useState } from "react";
 import { Web3Context } from "../Web3ContextProvider";
+import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
+  const navigate = useNavigate();
   const { account, connect, check } = useContext(Web3Context);
   const [role, setRole] = useState<string>("Student");
   const chainID = 1337;
@@ -47,7 +49,11 @@ const Signup = () => {
               id: formData.id,
             }
           );
-          console.log(result);
+          if (result.status === 200) {
+            navigate("/Student-home");
+          } else if (result.status === 500) {
+            navigate("/register");
+          }
         }
       } else {
         console.log("User already exists");

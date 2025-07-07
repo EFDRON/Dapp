@@ -107,33 +107,38 @@ async function RegisterStudentPrivate(
 }
 
 async function RegisterStudentPublic(contractAddress, contractAbi, value) {
+  console.log("Registering Student Public");
+
   const host = besu.rpcnode.url;
   const web3 = new Web3(host);
-  const contractInstance = new web3.eth.Contract(contractAbi, contractAddress);
-  const functionAbi = contractInstance._jsonInterface.find((e) => {
-    return e.name === "registerStudent";
-  });
-  const functionData = web3.eth.abi.encodeFunctionCall(functionAbi, [
-    value[0],
-    value[1],
-  ]);
 
-  const functionParams = {
-    to: contractAddress,
-    data: functionData,
-    from: value[0],
-    gas: "0x24A22",
-    gasPrice: "0x",
-  };
-  console.log(functionParams);
-  const signedTransaction = await web3.eth.accounts.signTransaction(
-    functionParams,
+  const account = web3.eth.accounts.privateKeyToAccount(
     besu.member3.accountPrivateKey
   );
-  const receipt = await web3.eth.sendSignedTransaction(
-    signedTransaction.rawTransaction
-  );
+  const fromAddress = account.address;
 
+  const contractInstance = new web3.eth.Contract(contractAbi, contractAddress);
+
+  // Encode function call
+  const data = contractInstance.methods
+    .registerStudent(value[0], value[1])
+    .encodeABI();
+
+  const tx = {
+    to: contractAddress,
+    data: data,
+    gas: 150000, // or tune it
+    gasPrice: "0x0", // for Besu/Quorum, no fees
+    from: fromAddress,
+  };
+
+  const signed = await web3.eth.accounts.signTransaction(
+    tx,
+    besu.member3.accountPrivateKey
+  );
+  const receipt = await web3.eth.sendSignedTransaction(signed.rawTransaction);
+
+  console.log("Result from Register:", receipt);
   return receipt;
 }
 
