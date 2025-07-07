@@ -54,6 +54,20 @@ const Signup = () => {
           } else if (result.status === 500) {
             navigate("/register");
           }
+        } else if (formData.role === "Institution") {
+          const result = await axios.post(
+            "http://localhost:5000/registerInstituteToPending",
+            {
+              name: formData.name,
+              institute_address: account,
+              id: formData.id,
+            }
+          );
+          if (result.status === 200) {
+            navigate("/waiting-for-verification");
+          } else if (result.status === 500) {
+            navigate("/register");
+          }
         }
       } else {
         console.log("User already exists");

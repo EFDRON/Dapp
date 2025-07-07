@@ -13,6 +13,7 @@ import InstHome from "./pages/InstPages/InstHome";
 import RecHome from "./pages/RecruiterPages/RecHome";
 import { Web3Provider } from "./Web3ContextProvider";
 import Register from "./pages/Register";
+import WatitinForVerification from "./pages/WatitinForVerification";
 
 function App() {
   return (
@@ -46,6 +47,11 @@ function App() {
         <Route path="/rec-home" element={<RecHome />} />
         {/* Register page */}
         <Route path="/register" element={<Register />} />
+        {/* Waiting for verification */}
+        <Route
+          path="/waiting-for-verification"
+          element={<WatitinForVerification />}
+        />
       </Routes>
     </Web3Provider>
   );

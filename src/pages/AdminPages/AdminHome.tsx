@@ -4,9 +4,18 @@ import logoBlack from "../../assets/LogoBlack.svg";
 import ColorMode from "../../components/ColorMode";
 import Pending from "../../components/Pending";
 import { useColorMode } from "../../components/ui/color-mode";
-
+import { useEffect, useState } from "react";
+import axios from "axios";
+import type { data } from "../../components/Pending";
 const AdminHome = () => {
   const colorMode = useColorMode().colorMode;
+  const [pending, setPending] = useState<data[]>([]);
+  useEffect(() => {
+    axios.get("http://localhost:5000/listPendingInstitutes").then((res) => {
+      console.log(res.data);
+      setPending(res.data as data[]);
+    });
+  }, []);
   return (
     <Grid templateAreas={{ base: `"nav" "main"` }}>
       <GridItem area="nav" justifyContent={"space-between"}>
@@ -18,7 +27,7 @@ const AdminHome = () => {
       </GridItem>
       <GridItem area="main" padding={2}>
         <center>
-          <Pending></Pending>
+          <Pending data={pending}></Pending>
         </center>
       </GridItem>
     </Grid>

@@ -33,13 +33,13 @@ const PendingStud = () => {
             <VStack marginEnd={"80px"}>
               <Text>Pending Students</Text>
               {pendings.map((pending) => (
-                <Pending key={pending}></Pending>
+                <Pending key={pending} data={pending}></Pending>
               ))}
             </VStack>
             <VStack>
               <Text>Transfer Students</Text>
               {transfer.map((transfer) => (
-                <Pending key={transfer}></Pending>
+                <Pending key={transfer} data={transfer}></Pending>
               ))}
             </VStack>
           </HStack>

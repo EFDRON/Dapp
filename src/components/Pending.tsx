@@ -1,23 +1,32 @@
 import { Card, VStack, Text, HStack, Button } from "@chakra-ui/react";
-
-const Pending = () => {
+export interface data {
+  name: string;
+  address: string;
+  id: string;
+}
+interface PendingProps {
+  data: data[];
+}
+const Pending = ({ data }: PendingProps) => {
   return (
     <Card.Root>
       <Card.Body>
-        <VStack>
-          <HStack>
-            <Text>Name:</Text>
-            <Text>John</Text>
-          </HStack>
-          <HStack>
-            <Text>Address:</Text>
-            <Text>0x00000</Text>
-          </HStack>
-          <HStack>
-            <Button>Accept</Button>
-            <Button>Reject</Button>
-          </HStack>
-        </VStack>
+        {data.map((item, index) => (
+          <VStack key={index}>
+            <HStack>
+              <Text>Name:</Text>
+              <Text>{item.name}</Text>
+            </HStack>
+            <HStack>
+              <Text>Address:</Text>
+              <Text>{item.address}</Text>
+            </HStack>
+            <HStack>
+              <Button>Accept</Button>
+              <Button>Reject</Button>
+            </HStack>
+          </VStack>
+        ))}
       </Card.Body>
     </Card.Root>
   );
