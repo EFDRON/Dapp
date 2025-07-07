@@ -41,4 +41,14 @@ const RegisterInstitutePrivateToPendi = async (
 
   return result;
 };
+
+const RegisterStudentPrivateTransfer = async (
+  clientUrl,
+  address,
+  value,
+  contractAbi,
+  fromPrivateKey,
+  fromPublicKey,
+  toPublicKey
+) => {};
 module.exports = RegisterInstitutePrivateToPendi;

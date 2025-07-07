@@ -13,6 +13,7 @@ const RegisterInstitutePrivateToPending = require("./Functions/InstFunctions.js"
 const {
   RegisterStudentPrivate,
   RegisterStudentPublic,
+  RegisterStudentPrivateToPending,
 } = require("./Functions/StudFunctions.js");
 const { ListPendingInstitutes } = require("./Functions/AdminFunctions.js");
 const chainId = 1337;
@@ -125,6 +126,41 @@ app.get("/listPendingInstitutes", async (req, res) => {
 // Placeholder for your Quorum/Web3 logic
 // app.post('/api/your-endpoint', async (req, res) => { ... });
 
+app.post("/regStudToInstPending", async (req, res) => {
+  const { student_address, institute_address } = req.body;
+
+  const resultPrivate = await RegisterStudentPrivateToPending(
+    besu.member3.url, // The clientUrl must match the sender's identity (member3)
+    [student_address, institute_address],
+    besu.member3.accountPrivateKey,
+    tessera.member3.publicKey,
+    tessera.member1.publicKey
+  );
+  console.log(resultPrivate);
+  if (resultPrivate.status === "0x1") {
+    res.status(200).json({ message: "Student added to pending successfully" });
+  } else {
+    res.status(500).json({ message: "Failed to add student to pending" });
+  }
+});
+app.post("/regStudToInstTransfer", async (req, res) => {
+  const { student_address, current_institute_address, new_institute_address } =
+    req.body;
+
+  const resultPrivate = await RegisterStudentPrivateTransfer(
+    besu.member2.url,
+    [student_address, current_institute_address, new_institute_address],
+    besu.member2.accountPrivateKey,
+    tessera.member2.publicKey,
+    tessera.member1.publicKey
+  );
+  console.log(resultPrivate);
+  if (resultPrivate.status === "0x1") {
+    res.status(200).json({ message: "Institution transfer Pending" });
+  } else {
+    res.status(500).json({ message: "Failed to transfer institution" });
+  }
+});
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
