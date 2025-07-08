@@ -9,7 +9,15 @@ import {
 } from "@chakra-ui/react";
 import user from "../assets/User.jpg";
 
-const StudentInfomation = () => {
+export interface StudentInfo {
+  name: string;
+  email: string;
+  id: string;
+  accountAddress: string;
+  institution: string;
+}
+
+const StudentInfomation = ({ data }: { data: StudentInfo }) => {
   return (
     <Center>
       <Card.Root flexDirection="row" overflow="hidden" maxW="3xl">
@@ -20,23 +28,23 @@ const StudentInfomation = () => {
             <VStack align="start">
               <HStack>
                 <Text fontWeight="bold">Name:</Text>
-                <Text>John Doe</Text>
+                <Text>{data.name}</Text>
               </HStack>
               <HStack>
                 <Text fontWeight="bold">Email:</Text>
-                <Text>john.doe@example.com</Text>
+                <Text>{data.email}</Text>
               </HStack>
               <HStack>
                 <Text fontWeight="bold">ID:</Text>
-                <Text>123456789</Text>
+                <Text>{data.id}</Text>
               </HStack>
               <VStack alignItems={"left"}>
                 <Text fontWeight="bold">Account Address:</Text>
-                <Text>0x1234567890123456789012345678901234567890</Text>
+                <Text>{data.accountAddress}</Text>
               </VStack>
               <HStack>
                 <Text fontWeight="bold">Institution:</Text>
-                <Text>MIT</Text>
+                <Text>{data.institution}</Text>
               </HStack>
             </VStack>
           </Card.Body>

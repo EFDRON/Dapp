@@ -163,6 +163,7 @@ app.post("/acceptInstitute", async (req, res) => {
     res.status(500).json({ message: "Failed to verify institute" });
   }
 });
+
 app.post("/rejectInstitute", async (req, res) => {
   const { name, address, id, index } = req.body;
   const resultPrivate = await removePendingInst(
@@ -180,6 +181,7 @@ app.post("/rejectInstitute", async (req, res) => {
   }
 });
 
+app.get("/studentInformation");
 // Placeholder for your Quorum/Web3 logic
 // app.post('/api/your-endpoint', async (req, res) => { ... });
 
