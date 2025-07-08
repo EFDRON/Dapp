@@ -131,7 +131,6 @@ const ListPendingInstitutes = async (
 
 const GenerateKey = async (
   clientUrl,
-  nodeName = "node",
   info,
   fromPrivateKey,
   fromPublicKey,
@@ -168,7 +167,6 @@ const GenerateKey = async (
 
 const VerifyInstitute = async (
   clientUrl,
-  nodeName = "node",
   info,
   fromPrivateKey,
   fromPublicKey,
@@ -176,7 +174,6 @@ const VerifyInstitute = async (
 ) => {
   const key = await GenerateKey(
     clientUrl,
-    nodeName,
     info,
     fromPrivateKey,
     fromPublicKey,
@@ -205,9 +202,10 @@ const VerifyInstitute = async (
   );
 
   // console.log(`Transaction hash: ${transactionHash}`);
-  const result1 = await web3quorum.priv.waitForTransactionReceipt(
+  const result = await web3quorum.priv.waitForTransactionReceipt(
     transactionHash
   );
+  return result;
 };
 
 async function createInstContract(
