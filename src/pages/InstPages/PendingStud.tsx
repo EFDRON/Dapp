@@ -12,10 +12,10 @@ const PendingStud = () => {
   const [pendings, setPendings] = useState<Data[]>([]);
   const [transfer, setTransfer] = useState<Data[]>([]);
   useEffect(() => {
-    axios.get("http://localhost:5000/listPendingStudents").then((res) => {
-      console.log(res.data);
-      setPendings(Array.isArray(res.data) ? res.data : [res.data]);
-    });
+    // axios.get("http://localhost:5000/listPendingStudents").then((res) => {
+    //   console.log(res.data);
+    //   setPendings(Array.isArray(res.data) ? res.data : [res.data]);
+    // });
     axios.get("http://localhost:5000/listTransferStudents").then((res) => {
       console.log(res.data);
       setTransfer(Array.isArray(res.data) ? res.data : [res.data]);

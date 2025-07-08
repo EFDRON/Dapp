@@ -1,8 +1,9 @@
 import { Button, Card, Center } from "@chakra-ui/react";
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import { Web3Context } from "../Web3ContextProvider";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Choose = () => {
   const navigate = useNavigate();
@@ -24,6 +25,13 @@ const Choose = () => {
       else if (data.type === "rec") navigate("/rec-home");
     }
   };
+  const [countinst, setcount] = useState<number>(0);
+  useEffect(() => {
+    axios.get("http://localhost:5000/getInstitutesCount").then((res) => {
+      console.log(res.data);
+      setcount(res.data);
+    });
+  }, []);
 
   return (
     <Center>
@@ -32,7 +40,7 @@ const Choose = () => {
           <Card.Title mt="2" justifyContent={"center"}>
             Student Data Management System
           </Card.Title>
-          <Card.Description></Card.Description>
+          <Card.Description>{countinst}</Card.Description>
         </Card.Body>
         <Card.Footer justifyContent={"center"} spaceX={2}>
           <RouterLink to="/register">

@@ -14,6 +14,7 @@ const {
   ListPendingStudents,
   VerifyPendingStudent,
   VerifyTransferStudent,
+  getInstitutesCount,
 } = require("./Functions/transferFunctions.js");
 const { tessera, besu, contractInformations } = require("./Files/keys.js");
 const {
@@ -173,26 +174,12 @@ app.post("/regStudToInstTransfer", async (req, res) => {
 });
 
 app.get("/listPendingStudents", async (req, res) => {
-  const PendingStudents = await ListPendingStudents(
-    besu.member2.url,
-    "node",
-    contractInformations.registerInst.contractAddress,
-    besu.member2.accountPrivateKey,
-    tessera.member2.publicKey,
-    tessera.member1.publicKey
-  );
+  const PendingStudents = await ListPendingStudents();
   console.log(PendingStudents);
   res.status(200).json(PendingStudents);
 });
 app.get("/listTransferStudents", async (req, res) => {
-  const TransferStudents = await ListTransferStudents(
-    besu.member2.url,
-    "node",
-    contractInformations.registerInst.contractAddress,
-    besu.member2.accountPrivateKey,
-    tessera.member2.publicKey,
-    tessera.member1.publicKey
-  );
+  const TransferStudents = await ListTransferStudents();
   console.log(TransferStudents);
   res.status(200).json(TransferStudents);
 });
@@ -213,6 +200,11 @@ app.post("/acceptTransferStudent", async (req, res) => {
   } else {
     res.status(500).json({ message: "Failed to accept student" });
   }
+});
+app.get("/getInstitutesCount", async (req, res) => {
+  const institutesCount = await getInstitutesCount("getInstitutesCount");
+  console.log(institutesCount);
+  res.status(200).json(institutesCount);
 });
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
