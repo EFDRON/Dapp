@@ -237,7 +237,7 @@ async function RegisterStudentPrivateToPending(
   fromPublicKey,
   toPublicKey
 ) {
-  const web3 = new Web3(besu.member1.url);
+  const web3 = new Web3(besu.member2.url);
   const web3quorum = new Web3Quorum(web3, chainId);
   const contract = new web3quorum.eth.Contract(contractAbiVerifyStud);
   const studentcontract = await getStudContract(
@@ -255,20 +255,23 @@ async function RegisterStudentPrivateToPending(
     toPublicKey
   );
   const functionAbi = contract._jsonInterface.find((e) => {
-    return e.name === "generateKey";
+    return e.name === "addStudToPending";
   });
   const functionArgs = web3quorum.eth.abi
     .encodeParameters(functionAbi.inputs, [
+      studInfo.name,
       studInfo.student_address,
+      studInfo.email,
       studInfo.id,
+      value[1],
     ])
     .slice(2);
   const functionParams = {
     to: contractInformations.verifyStud.contractAddress,
     data: functionAbi.signature + functionArgs,
-    privateKey: besu.member1.accountPrivateKey,
-    privateFrom: tessera.member1.publicKey,
-    privateFor: [tessera.member2.publicKey],
+    privateKey: besu.member2.accountPrivateKey,
+    privateFrom: tessera.member2.publicKey,
+    privateFor: [tessera.member1.publicKey],
   };
   const transactionHash = await web3quorum.priv.generateAndSendRawTransaction(
     functionParams
@@ -276,12 +279,7 @@ async function RegisterStudentPrivateToPending(
   const result = await web3quorum.priv.waitForTransactionReceipt(
     transactionHash
   );
-  const decoded = web3quorum.eth.abi.decodeParameters(
-    functionAbi.outputs,
-    result.output
-  );
-  console.log(decoded);
-  return decoded;
+  return result;
 }
 
 module.exports = {

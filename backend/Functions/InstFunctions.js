@@ -59,6 +59,7 @@ const RegisterStudentPrivateTransfer = async (
   fromPublicKey,
   toPublicKey
 ) => {
+  console.log("value", value);
   const web3 = new Web3(clientUrl);
   const web3quorum = new Web3Quorum(web3, chainId);
   const contract = new web3quorum.eth.Contract(contractAbiVerifyStud);
@@ -85,7 +86,7 @@ const RegisterStudentPrivateTransfer = async (
       studInfo.student_address,
       studInfo.email,
       studInfo.id,
-      value[1],
+      value[2],
       value[2],
     ])
     .slice(2);
@@ -96,12 +97,14 @@ const RegisterStudentPrivateTransfer = async (
     privateFrom: fromPublicKey,
     privateFor: [toPublicKey],
   };
+  console.log("functionParams", functionParams);
   const transactionHash = await web3quorum.priv.generateAndSendRawTransaction(
     functionParams
   );
   const result = await web3quorum.priv.waitForTransactionReceipt(
     transactionHash
   );
+  console.log("result", result);
 
   return result;
 };

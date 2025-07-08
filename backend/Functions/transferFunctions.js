@@ -116,39 +116,40 @@ const ListPendingStudents = async () => {
   console.log("pendingStudentsCount", pendingStudentsCount);
   const students = [];
 
-  // for (let i = 0; i < pendingStudentsCount; i++) {
-  //   const functionArgs = web3quorum.eth.abi
-  //     .encodeParameter(functionAbi.inputs[0], i)
-  //     .slice(2);
-  //   console.log("functionArgs", functionArgs);
-  //   const functionParams = {
-  //     to: contractInformations.verifyStud.contractAddress,
-  //     data: functionAbi.signature + functionArgs,
-  //     privateKey: besu.member2.accountPrivateKey,
-  //     privateFrom: tessera.member2.publicKey,
-  //     privateFor: [tessera.member1.publicKey],
-  //   };
-  //   console.log("functionParams", functionParams);
-  //   const transactionHash = await web3quorum.priv.generateAndSendRawTransaction(
-  //     functionParams
-  //   );
-  //   const result = await web3quorum.priv.waitForTransactionReceipt(
-  //     transactionHash
-  //   );
-  //   const decoded = web3quorum.eth.abi.decodeParameters(
-  //     ["string", "address", "string", "string", "address"],
-  //     result.output
-  //   );
-  //   console.log(decoded);
-  //   const intermediate = {
-  //     name: decoded[0],
-  //     address: decoded[1],
-  //     email: decoded[2],
-  //     id: decoded[3],
-  //     index: i,
-  //   };
-  //   students.push(intermediate);
-  // }
+  for (let i = 0; i < pendingStudentsCount; i++) {
+    const functionArgs = web3quorum.eth.abi
+      .encodeParameter(functionAbi.inputs[0], i)
+      .slice(2);
+    console.log("functionArgs", functionArgs);
+    const functionParams = {
+      to: contractInformations.verifyStud.contractAddress,
+      data: functionAbi.signature + functionArgs,
+      privateKey: besu.member2.accountPrivateKey,
+      privateFrom: tessera.member2.publicKey,
+      privateFor: [tessera.member1.publicKey],
+    };
+    console.log("functionParams", functionParams);
+    const transactionHash = await web3quorum.priv.generateAndSendRawTransaction(
+      functionParams
+    );
+    const result = await web3quorum.priv.waitForTransactionReceipt(
+      transactionHash
+    );
+    const decoded = web3quorum.eth.abi.decodeParameters(
+      ["string", "address", "string", "string", "address"],
+      result.output
+    );
+    console.log(decoded);
+    const intermediate = {
+      name: decoded[0],
+      address: decoded[1],
+      email: decoded[2],
+      id: decoded[3],
+      index: i,
+    };
+    students.push(intermediate);
+  }
+  console.log(students);
   return students;
 };
 
@@ -165,7 +166,7 @@ const ListTransferStudents = async () => {
   const students = [];
   for (let i = 0; i < transferStudentsCount; i++) {
     const functionArgs = web3quorum.eth.abi
-      .encodeParameters(functionAbi.inputs, i)
+      .encodeParameter(functionAbi.inputs[0], i)
       .slice(2);
     const functionParams = {
       to: contractInformations.verifyStud.contractAddress,
@@ -205,7 +206,7 @@ const VerifyPendingStudent = async (index) => {
   });
   const web3quorum = new Web3Quorum(web3, chainId);
   const functionArgs = web3quorum.eth.abi
-    .encodeParameters(functionAbi.inputs, [index])
+    .encodeParameter(functionAbi.inputs[0], index)
     .slice(2);
   const functionParams = {
     to: contractInformations.verifyStud.contractAddress,

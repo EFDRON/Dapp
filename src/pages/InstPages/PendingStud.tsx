@@ -12,14 +12,31 @@ const PendingStud = () => {
   const [pendings, setPendings] = useState<Data[]>([]);
   const [transfer, setTransfer] = useState<Data[]>([]);
   useEffect(() => {
-    axios.get("http://localhost:5000/listPendingStudents").then((res) => {
-      console.log(res.data);
-      setPendings(Array.isArray(res.data) ? res.data : [res.data]);
-    });
-    // axios.get("http://localhost:5000/listTransferStudents").then((res) => {
-    //   console.log(res.data);
-    //   setTransfer(Array.isArray(res.data) ? res.data : [res.data]);
-    // });
+    const fetchData = async () => {
+      try {
+        const transferRes = await axios.get(
+          "http://localhost:5000/listTransferStudents"
+        );
+        console.log(transferRes.data);
+        setTransfer(
+          Array.isArray(transferRes.data)
+            ? transferRes.data
+            : [transferRes.data]
+        );
+
+        const pendingRes = await axios.get(
+          "http://localhost:5000/listPendingStudents"
+        );
+        console.log(pendingRes.data);
+        setPendings(
+          Array.isArray(pendingRes.data) ? pendingRes.data : [pendingRes.data]
+        );
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+
+    fetchData();
   }, []);
 
   return (

@@ -187,7 +187,7 @@ app.post("/acceptPendingStudent", async (req, res) => {
   const { index } = req.body;
   const result = await VerifyPendingStudent(index);
   if (result.status === "0x1") {
-    res.status(200).json({ message: "Student accepted successfully" });
+    res.status(200).json(result);
   } else {
     res.status(500).json({ message: "Failed to accept student" });
   }
@@ -196,7 +196,7 @@ app.post("/acceptTransferStudent", async (req, res) => {
   const { index } = req.body;
   const result = await VerifyTransferStudent(index);
   if (result.status === "0x1") {
-    res.status(200).json({ message: "Student accepted successfully" });
+    res.status(200).json(result);
   } else {
     res.status(500).json({ message: "Failed to accept student" });
   }
