@@ -287,4 +287,6 @@ module.exports = {
   RegisterStudentPrivate,
   RegisterStudentPublic,
   RegisterStudentPrivateToPending,
+  getStudContract,
+  getStudProfile,
 };

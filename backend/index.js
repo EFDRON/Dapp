@@ -9,7 +9,10 @@ const Web3Quorum = require("web3js-quorum");
 const PORT = process.env.PORT || 5000;
 const createContract = require("./Files/main.js");
 const { tessera, besu, contractInformations } = require("./Files/keys.js");
-const RegisterInstitutePrivateToPending = require("./Functions/InstFunctions.js");
+const {
+  RegisterInstitutePrivateToPending,
+  RegisterStudentPrivateTransfer,
+} = require("./Functions/InstFunctions.js");
 const {
   RegisterStudentPrivate,
   RegisterStudentPublic,

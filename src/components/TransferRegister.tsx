@@ -49,9 +49,9 @@ const TransferRegister = ({ type }: Props) => {
       }
     );
     if (result.status === 200) {
-      navigate("/waiting-for-verification");
+      navigate("/institution-home");
     } else if (result.status === 500) {
-      navigate("/Student-register-institution");
+      navigate("/institution-transfer-students");
     }
   }
   function handleChangepending(e: ChangeEvent<HTMLInputElement>): void {
