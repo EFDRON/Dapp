@@ -4,6 +4,7 @@ const chainId = 1337;
 const path = require("path");
 const fs = require("fs-extra");
 const { verify } = require("crypto");
+const { contractInformations } = require("../Files/keys.js");
 const contractJsonRegInstPath = path.resolve(
   __dirname,
   "../Files",
@@ -148,7 +149,7 @@ const GenerateKey = async (
     .encodeParameters(functionAbi.inputs, [info.address, info.id])
     .slice(2);
   const functionParams = {
-    to: address,
+    to: contractInformations.registerInst.contractAddress,
     data: functionAbi.signature + functionArgs,
     privateKey: fromPrivateKey,
     privateFrom: fromPublicKey,
@@ -191,7 +192,7 @@ const VerifyInstitute = async (
     .encodeParameters(functionAbi.inputs, [key, info.index, info.address])
     .slice(2);
   const functionParams = {
-    to: address,
+    to: contractInformations.verifyInst.contractAddress,
     data: functionAbi.signature + functionArgs,
     privateKey: fromPrivateKey,
     privateFrom: fromPublicKey,
@@ -275,9 +276,50 @@ const registerInstToPublic = async (contractAddress, value) => {
   console.log("Result from Register:", receipt);
   return receipt;
 };
+const removePendingInst = async (
+  clientUrl,
+  info,
+  fromPrivateKey,
+  fromPublicKey,
+  toPublicKey
+) => {
+  const key = await GenerateKey(
+    clientUrl,
+    { address: info.address, id: info.id },
+    fromPrivateKey,
+    fromPublicKey,
+    toPublicKey
+  );
+  const web3 = new Web3(clientUrl);
+  const web3quorum = new Web3Quorum(web3, chainId);
+  const contract = new web3quorum.eth.Contract(contractAbiRegInst);
+  // eslint-disable-next-line no-underscore-dangle
+  const functionAbi = contract._jsonInterface.find((e) => {
+    return e.name === "removePendingInstitute";
+  });
+  const functionArgs = web3quorum.eth.abi
+    .encodeParameters(functionAbi.inputs, [key, info.index])
+    .slice(2);
+  const functionParams = {
+    to: contractInformations.registerInst.contractAddress,
+    data: functionAbi.signature + functionArgs,
+    privateKey: fromPrivateKey,
+    privateFrom: fromPublicKey,
+    privateFor: [toPublicKey],
+  };
+  const transactionHash = await web3quorum.priv.generateAndSendRawTransaction(
+    functionParams
+  );
+  // console.log(`Transaction hash: ${transactionHash}`);
+  const result = await web3quorum.priv.waitForTransactionReceipt(
+    transactionHash
+  );
+  return result;
+};
 module.exports = {
   ListPendingInstitutes,
   VerifyInstitute,
   createInstContract,
   registerInstToPublic,
+  removePendingInst,
 };
