@@ -1,7 +1,19 @@
 const Web3 = require("web3");
 const Web3Quorum = require("web3js-quorum");
 const chainId = 1337;
-
+const path = require("path");
+const fs = require("fs-extra");
+const { besu, tessera, contractInformations } = require("../Files/keys");
+// Verify Stud contract
+const contractJsonVerifyStudPath = path.resolve(
+  __dirname,
+  "../Files",
+  "verifystud.json"
+);
+const contractJsonVerifyStud = JSON.parse(
+  fs.readFileSync(contractJsonVerifyStudPath)
+);
+const contractAbiVerifyStud = contractJsonVerifyStud.abi;
 const { getStudContract, getStudProfile } = require("./StudFunctions.js");
 const RegisterInstitutePrivateToPending = async (
   clientUrl,
