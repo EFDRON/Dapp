@@ -6,8 +6,8 @@ export interface data {
 }
 interface PendingProps {
   data: data[];
-  accept: (address: string, id: string, index: number) => void;
-  reject: (address: string, id: string, index: number) => void;
+  accept: (name: string, address: string, id: string, index: number) => void;
+  reject: (name: string, address: string, id: string, index: number) => void;
 }
 
 const Pending = ({ data, accept, reject }: PendingProps) => {
@@ -27,14 +27,14 @@ const Pending = ({ data, accept, reject }: PendingProps) => {
             <HStack>
               <Button
                 onClick={() => {
-                  accept(item.address, item.id, index);
+                  accept(item.name, item.address, item.id, index);
                 }}
               >
                 Accept
               </Button>
               <Button
                 onClick={() => {
-                  reject(item.address, item.id, index);
+                  reject(item.name, item.address, item.id, index);
                 }}
               >
                 Reject

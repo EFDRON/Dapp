@@ -17,15 +17,25 @@ const AdminHome = () => {
     });
   }, []);
 
-  const accept = (address: string, id: string, index: number) => {
-    axios.post("http://localhost:5000/acceptInstitute", { address, id, index });
+  const accept = (name: string, address: string, id: string, index: number) => {
+    axios.post("http://localhost:5000/acceptInstitute", {
+      name,
+      address,
+      id,
+      index,
+    });
     axios.get("http://localhost:5000/listPendingInstitutes").then((res) => {
       console.log(res.data);
       setPending(res.data as data[]);
     });
   };
-  const reject = (address: string, id: string, index: number) => {
-    axios.post("http://localhost:5000/rejectInstitute", { address, id, index });
+  const reject = (name: string, address: string, id: string, index: number) => {
+    axios.post("http://localhost:5000/rejectInstitute", {
+      name,
+      address,
+      id,
+      index,
+    });
     axios.get("http://localhost:5000/listPendingInstitutes").then((res) => {
       console.log(res.data);
       setPending(res.data as data[]);
