@@ -7,8 +7,9 @@ import StudentInfomation, {
   type StudentInfo,
 } from "../../components/StudentInfomation";
 import { useColorMode } from "../../components/ui/color-mode";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { Web3Context } from "../../Web3ContextProvider";
 export const pages = [
   "Home",
   "Register Institution",
@@ -18,13 +19,20 @@ export const pages = [
 ];
 
 const StudentHome = () => {
+  const { studentContractAddress } = useContext(Web3Context);
   const colorMode = useColorMode().colorMode;
   const [data, setData] = useState<StudentInfo | undefined>(undefined);
   useEffect(() => {
-    axios.get("http://localhost:5000/studentInformation").then((res) => {
-      console.log(res.data);
-      setData(res.data);
-    });
+    axios
+      .get("http://localhost:5000/studentInformation", {
+        params: {
+          contractAddress: studentContractAddress,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setData(res.data);
+      });
   }, []);
 
   return (
@@ -46,3 +54,6 @@ const StudentHome = () => {
 };
 
 export default StudentHome;
+function useWeb3Context(): { studentContractAddress: any } {
+  throw new Error("Function not implemented.");
+}
