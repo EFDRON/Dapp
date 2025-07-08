@@ -163,6 +163,22 @@ app.post("/acceptInstitute", async (req, res) => {
     res.status(500).json({ message: "Failed to verify institute" });
   }
 });
+app.post("/rejectInstitute", async (req, res) => {
+  const { name, address, id, index } = req.body;
+  const resultPrivate = await removePendingInst(
+    besu.member1.url,
+    { name, address, id, index },
+    besu.member1.accountPrivateKey,
+    tessera.member1.publicKey,
+    tessera.member2.publicKey
+  );
+  console.log(resultPrivate);
+  if (resultPrivate.status === "0x1") {
+    res.status(200).json({ message: "Institute rejected successfully" });
+  } else {
+    res.status(500).json({ message: "Failed to reject institute" });
+  }
+});
 
 // Placeholder for your Quorum/Web3 logic
 // app.post('/api/your-endpoint', async (req, res) => { ... });
