@@ -16,6 +16,21 @@ const AdminHome = () => {
       setPending(res.data as data[]);
     });
   }, []);
+
+  const accept = (address: string, id: string, index: number) => {
+    axios.post("http://localhost:5000/acceptInstitute", { address, id, index });
+    axios.get("http://localhost:5000/listPendingInstitutes").then((res) => {
+      console.log(res.data);
+      setPending(res.data as data[]);
+    });
+  };
+  const reject = (address: string, id: string, index: number) => {
+    axios.post("http://localhost:5000/rejectInstitute", { address, id, index });
+    axios.get("http://localhost:5000/listPendingInstitutes").then((res) => {
+      console.log(res.data);
+      setPending(res.data as data[]);
+    });
+  };
   return (
     <Grid templateAreas={{ base: `"nav" "main"` }}>
       <GridItem area="nav" justifyContent={"space-between"}>
@@ -27,7 +42,7 @@ const AdminHome = () => {
       </GridItem>
       <GridItem area="main" padding={2}>
         <center>
-          <Pending data={pending}></Pending>
+          <Pending data={pending} accept={accept} reject={reject}></Pending>
         </center>
       </GridItem>
     </Grid>
