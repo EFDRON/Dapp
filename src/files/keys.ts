@@ -35,14 +35,14 @@ export default {
       forName: ["member1"],
     },
     verifyStud: {
-      contractAddress: "0x798ba7b86675064b365fc770c451ca056e2e7040",
+      contractAddress: "0x993f682e437d790d61fbee69cf4144f6256c3e11",
       from: "0xf0e2db6c8dc6c681bb5d6ad121a107f300e9b2b5",
       fromName: "member1",
       for: "0xca843569e3427144cead5e4d5999a3d0ccf92b8e",
       forName: ["member2"],
     },
     publicdata: {
-      contractAddress: "0x088EfA587732c3229C9d9C80422284F2607BC0e5",
+      contractAddress: "0xD35cae7EaA9f0e9E3022Bfeb8e5A6A8970919b78",
       from: "c9c913c8c3c1cd416d80a0abf475db2062f161f6",
       fromName: "rpcnode",
     },
