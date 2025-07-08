@@ -141,7 +141,7 @@ app.post("/regStudToInstPending", async (req, res) => {
   const { student_address, institute_address } = req.body;
 
   const resultPrivate = await RegisterStudentPrivateToPending(
-    besu.member3.url, // The clientUrl must match the sender's identity (member3)
+    besu.member3.url,
     [student_address, institute_address],
     besu.member3.accountPrivateKey,
     tessera.member3.publicKey,
