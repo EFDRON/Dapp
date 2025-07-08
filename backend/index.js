@@ -12,6 +12,7 @@ const { tessera, besu, contractInformations } = require("./Files/keys.js");
 const RegisterInstitutePrivateToPending = require("./Functions/InstFunctions.js");
 const {
   RegisterStudentPrivate,
+  getStudentInformation,
   RegisterStudentPublic,
 } = require("./Functions/StudFunctions.js");
 const {
@@ -181,7 +182,30 @@ app.post("/rejectInstitute", async (req, res) => {
   }
 });
 
-app.get("/studentInformation");
+app.get("/studentInformation", async (req, res) => {
+  const { contractAddress } = req.query;
+  console.log(contractAddress);
+  const studentInfo = await getStudentInformation(
+    besu.member2.url,
+    contractAddress,
+    besu.member2.accountPrivateKey,
+    tessera.member2.publicKey,
+    tessera.member1.publicKey
+  );
+  console.log(studentInfo);
+
+  const studentInformation = {
+    name: studentInfo[0],
+    accountAddress: studentInfo[1],
+    email: studentInfo[2],
+    id: studentInfo[3],
+    instituition: studentInfo[4],
+  };
+
+  console.log(studentInformation);
+  console.log(contractAddress);
+  res.status(200).json(studentInformation);
+});
 // Placeholder for your Quorum/Web3 logic
 // app.post('/api/your-endpoint', async (req, res) => { ... });
 
