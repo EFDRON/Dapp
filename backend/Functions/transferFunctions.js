@@ -5,7 +5,7 @@ const Web3Quorum = require("web3js-quorum");
 const chainId = 1337;
 const { besu, tessera, contractInformations } = require("../Files/keys");
 const createContract = require("../Files/main");
-
+const { getStudContract } = require("./StudFunctions");
 // Verify Stud contract
 const contractJsonVerifyStudPath = path.resolve(
   __dirname,
@@ -16,6 +16,16 @@ const contractJsonVerifyStud = JSON.parse(
   fs.readFileSync(contractJsonVerifyStudPath)
 );
 const contractAbiVerifyStud = contractJsonVerifyStud.abi;
+// register stud ABI
+const contractJsonRegStudPath = path.resolve(
+  __dirname,
+  "../Files",
+  "registerStud.json"
+);
+const contractJsonRegStud = JSON.parse(
+  fs.readFileSync(contractJsonRegStudPath)
+);
+const contractAbiRegStud = contractJsonRegStud.abi;
 
 // Verify Inst contract
 const contractJsonVerifyInstPath = path.resolve(
@@ -27,6 +37,14 @@ const contractJsonVerifyInst = JSON.parse(
   fs.readFileSync(contractJsonVerifyInstPath)
 );
 const contractAbiVerifyInst = contractJsonVerifyInst.abi;
+// student contract
+const contractJsonStudPath = path.resolve(
+  __dirname,
+  "../Files",
+  "student.json"
+);
+const contractJsonStud = JSON.parse(fs.readFileSync(contractJsonStudPath));
+const contractAbiStud = contractJsonStud.abi;
 
 const getInstitutesCount = async (functionName) => {
   const web3 = new Web3(besu.member1.url);
@@ -160,11 +178,13 @@ const ListTransferStudents = async () => {
   const transferStudentsCount = await getStudentsCount(
     "getTransferStudentsCount"
   );
+  console.log("transferStudentsCount", transferStudentsCount);
   const functionAbi = contract._jsonInterface.find((e) => {
     return e.name === "getTransferStudentByindex";
   });
   const students = [];
   for (let i = 0; i < transferStudentsCount; i++) {
+    console.log("started listing transfer students", i);
     const functionArgs = web3quorum.eth.abi
       .encodeParameter(functionAbi.inputs[0], i)
       .slice(2);
@@ -195,20 +215,52 @@ const ListTransferStudents = async () => {
     };
     students.push(intermediate);
   }
+  console.log("students", students);
   return students;
 };
+const addInstTostudInfo = async (index, key, institute_address) => {
+  const web3 = new Web3(besu.member3.url);
+  const web3quorum = new Web3Quorum(web3, chainId);
+  const contract = new web3quorum.eth.Contract(contractAbiRegStud);
+  console.log("started addingtoinfo step1");
+  const functionAbi = contract._jsonInterface.find((e) => {
+    return e.name === "addInstTostudInfo";
+  });
+  const functionArgs = web3quorum.eth.abi
+    .encodeParameters(functionAbi.inputs, [index, key, institute_address])
+    .slice(2);
 
-const VerifyPendingStudent = async (index) => {
-  console.log("started verifying", index);
+  console.log("functionArgs1", functionArgs);
+
+  const functionParams = {
+    to: contractInformations.registerStud.contractAddress,
+    data: functionAbi.signature + functionArgs,
+    privateKey: besu.member3.accountPrivateKey,
+    privateFrom: tessera.member3.publicKey,
+    privateFor: [tessera.member1.publicKey],
+  };
+  console.log("functionParams", functionParams);
+  const transactionHash = await web3quorum.priv.generateAndSendRawTransaction(
+    functionParams
+  );
+  const result = await web3quorum.priv.waitForTransactionReceipt(
+    transactionHash
+  );
+  console.log("result1", result);
+  return result;
+};
+const verifystudent = async (index, functionName) => {
   const web3 = new Web3(besu.member2.url);
   const web3quorum = new Web3Quorum(web3, chainId);
   const contract = new web3quorum.eth.Contract(contractAbiVerifyStud);
+  console.log("started verifying step2");
   const functionAbi = contract._jsonInterface.find((e) => {
-    return e.name === "verifystudent";
+    return e.name === functionName;
   });
   const functionArgs = web3quorum.eth.abi
-    .encodeParameter(functionAbi.inputs[0], index)
+    .encodeParameters(functionAbi.inputs, [index])
     .slice(2);
+
   console.log("functionArgs", functionArgs);
   const functionParams = {
     to: contractInformations.verifyStud.contractAddress,
@@ -224,36 +276,93 @@ const VerifyPendingStudent = async (index) => {
   const result = await web3quorum.priv.waitForTransactionReceipt(
     transactionHash
   );
-  console.log("result", result);
-  return result.output;
+  console.log("result2", result);
+  return result;
 };
-const VerifyTransferStudent = async (index) => {
-  console.log("started verifying", index);
-  const web3 = new Web3(besu.member2.url);
+const addInstToProfile = async (index, studAddress, instituteAddress) => {
+  const web3 = new Web3(besu.member1.url);
   const web3quorum = new Web3Quorum(web3, chainId);
-  const contract = new web3quorum.eth.Contract(contractAbiVerifyStud);
+  const contract = new web3quorum.eth.Contract(contractAbiStud);
+  console.log("started addingtoprofile step3");
   const functionAbi = contract._jsonInterface.find((e) => {
-    return e.name === "verifyTransferstudent";
+    return e.name === "addInstToProfile";
   });
+  const contractAddress = await getStudContract(studAddress);
   const functionArgs = web3quorum.eth.abi
-    .encodeParameters(functionAbi.inputs, [index])
+    .encodeParameter(functionAbi.inputs[0], instituteAddress)
     .slice(2);
+
   console.log("functionArgs", functionArgs);
   const functionParams = {
-    to: contractInformations.verifyStud.contractAddress,
+    to: contractAddress,
     data: functionAbi.signature + functionArgs,
-    privateKey: besu.member2.accountPrivateKey,
-    privateFrom: tessera.member2.publicKey,
-    privateFor: [tessera.member1.publicKey],
+    privateKey: besu.member1.accountPrivateKey,
+    privateFrom: tessera.member1.publicKey,
+    privateFor: [tessera.member3.publicKey],
   };
+  console.log("functionParams", functionParams);
   const transactionHash = await web3quorum.priv.generateAndSendRawTransaction(
     functionParams
   );
   const result = await web3quorum.priv.waitForTransactionReceipt(
     transactionHash
   );
-  console.log("result", result);
-  return result.output;
+  console.log("result3", result);
+  return result;
+};
+const VerifyPendingStudent = async (
+  name,
+  address,
+  email,
+  id,
+  index,
+  institute_address
+) => {
+  console.log("started verifying", index);
+  const web3 = new Web3(besu.member2.url);
+  const key = web3.utils.soliditySha3(address, id);
+  const result1 = await addInstTostudInfo(index, key, institute_address);
+  const result2 = await verifystudent(index, "verifystudent");
+  const result3 = await addInstToProfile(index, address, institute_address);
+  console.log("result1", result1);
+  console.log("result2", result2);
+  console.log("result3", result3);
+  console.log(
+    result1.status === "0x1" &&
+      result2.status === "0x1" &&
+      result3.status === "0x1"
+  );
+  return (
+    result1.status === "0x1" &&
+    result2.status === "0x1" &&
+    result3.status === "0x1"
+  );
+};
+const VerifyTransferStudent = async (
+  name,
+  address,
+  email,
+  id,
+  index,
+  institute_address
+) => {
+  const web3 = new Web3(besu.member2.url);
+  console.log("started verifying", index);
+  const key = web3.utils.soliditySha3(address, id);
+  const result1 = await addInstTostudInfo(index, key, institute_address);
+  const result2 = await verifystudent(index, "verifyTransferstudent");
+  const result3 = await addInstToProfile(index, address, institute_address);
+
+  console.log(
+    result1.status === "0x1" &&
+      result2.status === "0x1" &&
+      result3.status === "0x1"
+  );
+  return (
+    result1.status === "0x1" &&
+    result2.status === "0x1" &&
+    result3.status === "0x1"
+  );
 };
 
 module.exports = {

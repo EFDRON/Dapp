@@ -51,14 +51,8 @@ const contractJsonVerifyStud = JSON.parse(
 );
 const contractAbiVerifyStud = contractJsonVerifyStud.abi;
 
-async function getStudContract(
-  clientUrl,
-  accountAddress,
-  fromPrivateKey,
-  fromPublicKey,
-  toPublicKey
-) {
-  const web3 = new Web3(clientUrl);
+async function getStudContract(accountAddress) {
+  const web3 = new Web3(besu.member1.url);
   const web3quorum = new Web3Quorum(web3, chainId);
   const contract = new web3quorum.eth.Contract(contractAbiRegStud);
   const functionAbi = contract._jsonInterface.find((e) => {
@@ -70,9 +64,9 @@ async function getStudContract(
   const functionParams = {
     to: contractInformations.registerStud.contractAddress,
     data: functionAbi.signature + functionArgs,
-    privateKey: fromPrivateKey,
-    privateFrom: fromPublicKey,
-    privateFor: [toPublicKey],
+    privateKey: besu.member1.accountPrivateKey,
+    privateFrom: tessera.member1.publicKey,
+    privateFor: [tessera.member3.publicKey],
   };
   const transactionHash = await web3quorum.priv.generateAndSendRawTransaction(
     functionParams
@@ -240,13 +234,7 @@ async function RegisterStudentPrivateToPending(
   const web3 = new Web3(besu.member2.url);
   const web3quorum = new Web3Quorum(web3, chainId);
   const contract = new web3quorum.eth.Contract(contractAbiVerifyStud);
-  const studentcontract = await getStudContract(
-    clientUrl,
-    value[0],
-    fromPrivateKey,
-    fromPublicKey,
-    toPublicKey
-  );
+  const studentcontract = await getStudContract(value[0]);
   const studInfo = await getStudProfile(
     clientUrl,
     studentcontract,

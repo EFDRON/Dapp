@@ -52,24 +52,12 @@ const RegisterInstitutePrivateToPending = async (
   return result;
 };
 
-const RegisterStudentPrivateTransfer = async (
-  clientUrl,
-  value,
-  fromPrivateKey,
-  fromPublicKey,
-  toPublicKey
-) => {
+const RegisterStudentPrivateTransfer = async (value) => {
   console.log("value", value);
-  const web3 = new Web3(clientUrl);
+  const web3 = new Web3(besu.member2.url);
   const web3quorum = new Web3Quorum(web3, chainId);
   const contract = new web3quorum.eth.Contract(contractAbiVerifyStud);
-  const studentcontract = await getStudContract(
-    besu.member3.url,
-    value[0],
-    besu.member3.accountPrivateKey,
-    tessera.member3.publicKey,
-    tessera.member1.publicKey
-  );
+  const studentcontract = await getStudContract(value[0]);
   const studInfo = await getStudProfile(
     besu.member3.url,
     studentcontract,
@@ -86,16 +74,16 @@ const RegisterStudentPrivateTransfer = async (
       studInfo.student_address,
       studInfo.email,
       studInfo.id,
-      value[2],
+      value[1],
       value[2],
     ])
     .slice(2);
   const functionParams = {
     to: contractInformations.verifyStud.contractAddress,
     data: functionAbi.signature + functionArgs,
-    privateKey: fromPrivateKey,
-    privateFrom: fromPublicKey,
-    privateFor: [toPublicKey],
+    privateKey: besu.member2.accountPrivateKey,
+    privateFrom: tessera.member2.publicKey,
+    privateFor: [tessera.member1.publicKey],
   };
   console.log("functionParams", functionParams);
   const transactionHash = await web3quorum.priv.generateAndSendRawTransaction(

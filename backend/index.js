@@ -157,14 +157,14 @@ app.post("/regStudToInstPending", async (req, res) => {
 app.post("/regStudToInstTransfer", async (req, res) => {
   const { student_address, current_institute_address, new_institute_address } =
     req.body;
-
-  const resultPrivate = await RegisterStudentPrivateTransfer(
-    besu.member2.url,
-    [student_address, current_institute_address, new_institute_address],
-    besu.member2.accountPrivateKey,
-    tessera.member2.publicKey,
-    tessera.member1.publicKey
-  );
+  console.log("student_address", student_address);
+  console.log("current_institute_address", current_institute_address);
+  console.log("new_institute_address", new_institute_address);
+  const resultPrivate = await RegisterStudentPrivateTransfer([
+    student_address,
+    current_institute_address,
+    new_institute_address,
+  ]);
   console.log(resultPrivate);
   if (resultPrivate.status === "0x1") {
     res.status(200).json({ message: "Institution transfer Pending" });
@@ -184,18 +184,32 @@ app.get("/listTransferStudents", async (req, res) => {
   res.status(200).json(TransferStudents);
 });
 app.post("/acceptPendingStudent", async (req, res) => {
-  const { index } = req.body;
-  const result = await VerifyPendingStudent(index);
-  if (result.status === "0x1") {
+  const { name, address, email, id, index, institute_address } = req.body;
+  const result = await VerifyPendingStudent(
+    name,
+    address,
+    email,
+    id,
+    index,
+    institute_address
+  );
+  if (result) {
     res.status(200).json({ message: "Student accepted successfully" });
   } else {
     res.status(500).json({ message: "Failed to accept student" });
   }
 });
 app.post("/acceptTransferStudent", async (req, res) => {
-  const { index } = req.body;
-  const result = await VerifyTransferStudent(index);
-  if (result.status === "0x1") {
+  const { name, address, email, id, index, institute_address } = req.body;
+  const result = await VerifyTransferStudent(
+    name,
+    address,
+    email,
+    id,
+    index,
+    institute_address
+  );
+  if (result) {
     res.status(200).json({ message: "Student accepted successfully" });
   } else {
     res.status(500).json({ message: "Failed to accept student" });
