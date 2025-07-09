@@ -18,6 +18,8 @@ export interface StudentInfo {
 }
 
 const StudentInfomation = ({ data }: { data: StudentInfo }) => {
+  console.log("data", data);
+
   return (
     <Center>
       <Card.Root flexDirection="row" overflow="hidden" maxW="3xl">

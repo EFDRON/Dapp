@@ -18,7 +18,7 @@ const Pending = ({ data, accept, reject }: PendingProps) => {
           <VStack key={index}>
             <HStack>
               <Text>Name:</Text>
-              <Text>{item.name}</Text>
+              <Text>{item.name + " " + item.id}</Text>
             </HStack>
             <HStack>
               <Text>Address:</Text>

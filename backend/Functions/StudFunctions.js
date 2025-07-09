@@ -159,7 +159,7 @@ const gentStudentInstitution = async (
     return e.name === "getRegisteredStudentByKey";
   });
   const functionArgs = web3quorum.eth.abi
-    .encodeParameters(functionAbi.inputs, [key])
+    .encodeParameter(functionAbi.inputs[0], key)
     .slice(2);
   const functionParams = {
     to: contractInformations.registerStud.contractAddress,
@@ -176,9 +176,10 @@ const gentStudentInstitution = async (
     transactionHash
   );
   const decoded = web3quorum.eth.abi.decodeParameters(
-    ["string", "address", "string", "string", "string", "address"],
+    functionAbi.outputs,
     result.output
   );
+  console.log("decoded", decoded);
   return decoded;
 };
 
@@ -196,6 +197,7 @@ const getStudentInformation = async (
   const functionAbi = contract._jsonInterface.find((e) => {
     return e.name === "getStudentInfo";
   });
+
   const functionArgs = web3quorum.eth.abi
     .encodeParameters(functionAbi.inputs, [])
     .slice(2);
@@ -214,10 +216,12 @@ const getStudentInformation = async (
     transactionHash
   );
   const decoded = web3quorum.eth.abi.decodeParameters(
-    ["address", "string", "string", "string", "uint256"],
+    functionAbi.outputs,
     result.output
   );
+  console.log("decoded", decoded);
   const key = web3.utils.soliditySha3(decoded[0], decoded[3]);
+  console.log("key", key);
   const studentInfo = await gentStudentInstitution(
     clientUrl,
 

@@ -145,8 +145,8 @@ app.post("/acceptInstitute", async (req, res) => {
 
   const resultPrivate = await VerifyInstitute(
     besu.member1.url,
-    { name, address, id, index },
-    contractAbiRegInst,
+    { name, address, id, index, InstContractAddress },
+
     besu.member1.accountPrivateKey,
     tessera.member1.publicKey,
     tessera.member2.publicKey
@@ -156,7 +156,6 @@ app.post("/acceptInstitute", async (req, res) => {
     contractInformations.publicdata.contractAddress,
     [address, InstContractAddress]
   );
-  console.log("Public Registration Receipt", resultPublic);
 
   if (resultPrivate.status === "0x1" && resultPublic.status === true) {
     res.status(200).json({ message: "Institute verified successfully" });
@@ -184,12 +183,12 @@ app.post("/rejectInstitute", async (req, res) => {
 
 app.get("/studentInformation", async (req, res) => {
   const { contractAddress } = req.query;
-  console.log(contractAddress);
+  console.log("contractAddress", contractAddress);
   const studentInfo = await getStudentInformation(
-    besu.member2.url,
+    besu.member3.url,
     contractAddress,
-    besu.member2.accountPrivateKey,
-    tessera.member2.publicKey,
+    besu.member3.accountPrivateKey,
+    tessera.member3.publicKey,
     tessera.member1.publicKey
   );
   console.log(studentInfo);
@@ -199,7 +198,7 @@ app.get("/studentInformation", async (req, res) => {
     accountAddress: studentInfo[1],
     email: studentInfo[2],
     id: studentInfo[3],
-    instituition: studentInfo[4],
+    institution: studentInfo[4],
   };
 
   console.log(studentInformation);

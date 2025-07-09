@@ -4,7 +4,7 @@ const chainId = 1337;
 const path = require("path");
 const fs = require("fs-extra");
 const { verify } = require("crypto");
-const { contractInformations } = require("../Files/keys.js");
+const { contractInformations, besu, tessera } = require("../Files/keys.js");
 const contractJsonRegInstPath = path.resolve(
   __dirname,
   "../Files",
@@ -30,11 +30,16 @@ const contractJsonPublicData = JSON.parse(
 );
 
 const contractAbiPublicData = contractJsonPublicData.abi;
+
 const contractJsonVerifyInst = JSON.parse(
   fs.readFileSync(contractJsonVerifyInstPath)
 );
 const contractAbiVerifyInst = contractJsonVerifyInst.abi;
-const contractJsonInstPath = path.resolve(__dirname, "../Files", "inst.json");
+const contractJsonInstPath = path.resolve(
+  __dirname,
+  "../Files",
+  "institute.json"
+);
 const contractJsonInst = JSON.parse(fs.readFileSync(contractJsonInstPath));
 const contractAbiInst = contractJsonInst.abi;
 const contractBytecodeInst = contractJsonInst.evm.bytecode.object;
@@ -119,13 +124,11 @@ const ListPendingInstitutes = async (
       ["string", "address", "string", "address"],
       result.output
     );
-    console.log("decoded", decoded);
     institutes.push({
       name: decoded[0],
       address: decoded[1],
       id: decoded[2],
     });
-    console.log(institutes);
   }
   return institutes;
 };
@@ -173,24 +176,24 @@ const VerifyInstitute = async (
   fromPublicKey,
   toPublicKey
 ) => {
-  const key = await GenerateKey(
-    clientUrl,
-    info,
-    fromPrivateKey,
-    fromPublicKey,
-    toPublicKey
-  );
   const web3 = new Web3(clientUrl);
   const web3quorum = new Web3Quorum(web3, chainId);
+  const key = web3.utils.soliditySha3(info.address, info.id);
+
   const contract = new web3quorum.eth.Contract(contractAbiVerifyInst);
   // eslint-disable-next-line no-underscore-dangle
   const functionAbi = contract._jsonInterface.find((e) => {
     return e.name === "verifyInstitution";
   });
-
+  console.log("index", info.index, "address", info.InstContractAddress);
   const functionArgs = web3quorum.eth.abi
-    .encodeParameters(functionAbi.inputs, [key, info.index, info.address])
+    .encodeParameters(functionAbi.inputs, [
+      key,
+      info.index,
+      info.InstContractAddress,
+    ])
     .slice(2);
+  console.log("functionArgs", functionArgs);
   const functionParams = {
     to: contractInformations.verifyInst.contractAddress,
     data: functionAbi.signature + functionArgs,
@@ -198,6 +201,7 @@ const VerifyInstitute = async (
     privateFrom: fromPublicKey,
     privateFor: [toPublicKey],
   };
+  console.log("functionParams", functionParams);
   const transactionHash = await web3quorum.priv.generateAndSendRawTransaction(
     functionParams
   );
@@ -245,8 +249,9 @@ const registerInstToPublic = async (contractAddress, value) => {
   const web3 = new Web3(host);
 
   const account = web3.eth.accounts.privateKeyToAccount(
-    besu.member1.accountPrivateKey
+    besu.member2.accountPrivateKey
   );
+
   const fromAddress = account.address;
 
   const contractInstance = new web3.eth.Contract(
@@ -269,11 +274,10 @@ const registerInstToPublic = async (contractAddress, value) => {
 
   const signed = await web3.eth.accounts.signTransaction(
     tx,
-    besu.member1.accountPrivateKey
+    besu.member2.accountPrivateKey
   );
   const receipt = await web3.eth.sendSignedTransaction(signed.rawTransaction);
 
-  console.log("Result from Register:", receipt);
   return receipt;
 };
 const removePendingInst = async (

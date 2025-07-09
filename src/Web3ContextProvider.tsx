@@ -73,12 +73,11 @@ export const Web3Provider: React.FC<Web3ProviderProps> = ({ children }) => {
       publicdata.abi,
       contInfo.publicdata.contractAddress
     );
-    console.log("contractInstance", contractInstance);
+
     try {
       const isMoe = await contractInstance.methods
         .ismoe()
         .call({ from: account });
-      console.log("is Moe", isMoe);
       if (isMoe) {
         return { type: "moe", contAddress: "", node: "" };
       }

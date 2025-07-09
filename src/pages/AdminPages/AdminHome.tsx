@@ -24,10 +24,10 @@ const AdminHome = () => {
       id,
       index,
     });
-    axios.get("http://localhost:5000/listPendingInstitutes").then((res) => {
-      console.log(res.data);
-      setPending(res.data as data[]);
-    });
+    // axios.get("http://localhost:5000/listPendingInstitutes").then((res) => {
+    //   console.log(res.data);
+    //   setPending(res.data as data[]);
+    // });
   };
   const reject = (name: string, address: string, id: string, index: number) => {
     axios.post("http://localhost:5000/rejectInstitute", {
@@ -36,10 +36,10 @@ const AdminHome = () => {
       id,
       index,
     });
-    axios.get("http://localhost:5000/listPendingInstitutes").then((res) => {
-      console.log(res.data);
-      setPending(res.data as data[]);
-    });
+    // axios.get("http://localhost:5000/listPendingInstitutes").then((res) => {
+    //   console.log(res.data);
+    //   setPending(res.data as data[]);
+    // });
   };
   return (
     <Grid templateAreas={{ base: `"nav" "main"` }}>
