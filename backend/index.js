@@ -201,11 +201,7 @@ app.post("/acceptTransferStudent", async (req, res) => {
     res.status(500).json({ message: "Failed to accept student" });
   }
 });
-app.get("/getInstitutesCount", async (req, res) => {
-  const institutesCount = await getInstitutesCount("getInstitutesCount");
-  console.log(institutesCount);
-  res.status(200).json(institutesCount);
-});
+
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });

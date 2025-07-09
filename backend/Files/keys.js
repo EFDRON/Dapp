@@ -34,14 +34,14 @@ module.exports = {
       forName: ["member1"],
     },
     verifyStud: {
-      contractAddress: "0x2edb29ffbcbe66b2731820074ae080191976c76d",
+      contractAddress: "0xca75b2379f4cea9d780df5ef442957b006a707cf",
       from: "0xf0e2db6c8dc6c681bb5d6ad121a107f300e9b2b5",
       fromName: "member1",
       for: "0xca843569e3427144cead5e4d5999a3d0ccf92b8e",
       forName: ["member2"],
     },
     publicdata: {
-      contractAddress: "0xFCA05AE6dcbe6a2fDA47D05Bd274A44883923901",
+      contractAddress: "0xfD657Eb45E1412181603e18eB495782E2F6979FA",
       from: "c9c913c8c3c1cd416d80a0abf475db2062f161f6",
       fromName: "rpcnode",
     },
