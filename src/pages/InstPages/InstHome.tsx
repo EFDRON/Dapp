@@ -3,7 +3,9 @@ import ColorMode from "../../components/ColorMode";
 import NavBar from "../../components/NavBar";
 import logoWhite from "../../assets/LogoWhite.svg";
 import logoBlack from "../../assets/LogoBlack.svg";
-import StudentInfomation from "../../components/StudentInfomation";
+import StudentInfomation, {
+  type StudentInfo,
+} from "../../components/StudentInfomation";
 import { useColorMode } from "../../components/ui/color-mode";
 import { useContext } from "react";
 import { Web3Context } from "../../Web3ContextProvider";
@@ -29,7 +31,7 @@ const StudentHome = () => {
       </GridItem>
       <GridItem area="main" padding={2}>
         <center>
-          <StudentInfomation data={}></StudentInfomation>
+          <StudentInfomation data={{} as StudentInfo}></StudentInfomation>
         </center>
       </GridItem>
     </Grid>

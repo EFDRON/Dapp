@@ -19,7 +19,9 @@ export const pages = [
 ];
 
 const StudentHome = () => {
-  const { studentContractAddress } = useContext(Web3Context);
+  const { account, studentContractAddress } = useContext(Web3Context);
+  console.log(account);
+  console.log(studentContractAddress);
   const colorMode = useColorMode().colorMode;
   const [data, setData] = useState<StudentInfo | undefined>(undefined);
   useEffect(() => {
