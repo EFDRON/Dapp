@@ -45,8 +45,10 @@ const StudentInfomation = ({ data }: { data: StudentInfo }) => {
                 <Text>{data.accountAddress}</Text>
               </VStack>
               <HStack>
-                <Text fontWeight="bold">Institution:</Text>
-                <Text>{data.institution}</Text>
+                <VStack alignItems={"left"}>
+                  <Text fontWeight="bold">Institution:</Text>
+                  <Text>{data.institution}</Text>
+                </VStack>
               </HStack>
             </VStack>
           </Card.Body>
