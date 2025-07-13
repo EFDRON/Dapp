@@ -17,6 +17,7 @@ const PendingStud = () => {
         const transferRes = await axios.get(
           "http://localhost:5000/listTransferStudents"
         );
+        console.log("transferRes.data: ", transferRes.data);
         console.log(transferRes.data);
         setTransfer(
           Array.isArray(transferRes.data)
